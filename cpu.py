@@ -58,11 +58,16 @@ def calc(b: List[List[int]], a: List[List[int]]):
         perc = [(each/total)*100 for each in diff]
         busy = perc[user]+perc[nice]+perc[system]+perc[irq]+perc[softirq]+perc[steal]
         if i == 0:
-            console.print(f"[bright_yellow]CPU({busy:.1f}): -> [/bright_yellow] ", end = '\t')
+            console.print(f"[bright_yellow]CPU ({busy:.1f}): -> [/bright_yellow] ", end = '\t')
             for j in perc:
                 console.print (f"[bright_yellow]{j:.1f}[/bright_yellow]", end= '\t')
         else:
-            console.print(f"CPU{i-1}",'(',end='')
+            ''' 
+            reason for using multiple print instead of single f string:
+            numbers in terminal need to be colored but using f string
+            would make them string.
+            '''
+            console.print(f"CPU{i-1}(",end='')
             console.print(round(busy,1),end='')
             console.print("): -> ", end = '\t')
             for j in perc:
