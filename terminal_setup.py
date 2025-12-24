@@ -1,6 +1,7 @@
 from rich.console import Console
 from rich.theme import Theme
 
+
 class TypedConsole(Console):
     def print(self, *objects, **kwargs):
         styled = []
@@ -11,6 +12,6 @@ class TypedConsole(Console):
                 styled.append(obj)
         super().print(*styled, **kwargs)
 
+
 theme = Theme({"number": "bright_green"})
 console = TypedConsole(theme=theme, style="bright_blue")
-

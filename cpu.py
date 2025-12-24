@@ -1,6 +1,7 @@
 import re
 from typing import List
 from terminal_setup import console
+
 """
 proc/stat contains data like this
 for cpuN:--> user: int(user-space)
@@ -20,27 +21,28 @@ each of these numbers are in integer form representing jiffy time unit. 1 jiffy 
 
 user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice = range(10)
 
-def read_cpu()-> List[List[int]]:
-    """
-    Function to read cpu data from proc file.
-    
+
+def read_cpu() -> List[List[int]]:
+    """Function to read cpu data from proc file.
+
     Returns:
-       List[List]: detail of each core at that time. 
+       List[List]: detail of each core at that time.
     """
     result = []
     with open("/proc/stat", "r") as f:
-            while True:
-                data = f.readline()
-                if data[0:3]=="cpu":
-                    if re.match(r"cpu", data[0:3]):
-                        result.append(list(map(int, data.split()[1:])))
-                else:
-                    break
+        while True:
+            data = f.readline()
+            if data[0:3] == "cpu":
+                if re.match(r"cpu", data[0:3]):
+                    result.append(list(map(int, data.split()[1:])))
+            else:
+                break
     return result
 
+
 def calc(b: List[List[int]], a: List[List[int]]):
-    """
-    Function to calculate and display the usage which is difference in data at particular  time intervals.
+    """Function to calculate and display the usage which is difference in data
+    at particular  time intervals.
 
     Args:
         b (List[List]): current data of proc file.
@@ -49,31 +51,42 @@ def calc(b: List[List[int]], a: List[List[int]]):
     Returns:
         None
     """
-    console.print(f"[bright_cyan][bold]cpu(busy) \tuser  nice  system   idle    iowait    irq  softirq  steal  guest  guest_nice[/bold][/bright_cyan] ") 
+    console.print(
+        "[bright_cyan][bold]cpu(busy) \tuser  nice  system   idle    iowait    irq  softirq  steal  guest  guest_nice[/bold][/bright_cyan] "
+    )
     for i in range(len(b)):
-        diff = [c - p for c , p in zip(b[i],a[i])]
+        diff = [c - p for c, p in zip(b[i], a[i])]
         total = sum(diff)
         if total == 0:
             continue
-        perc = [(each/total)*100 for each in diff]
-        busy = perc[user]+perc[nice]+perc[system]+perc[irq]+perc[softirq]+perc[steal]
+        perc = [(each / total) * 100 for each in diff]
+        busy = (
+            perc[user]
+            + perc[nice]
+            + perc[system]
+            + perc[irq]
+            + perc[softirq]
+            + perc[steal]
+        )
         if i == 0:
-            console.print(f"[bright_yellow]CPU ({busy:.1f}): -> [/bright_yellow] ", end = '\t')
+            console.print(
+                f"[bright_yellow]CPU ({busy:.1f}): -> [/bright_yellow] ", end="\t"
+            )
             for j in perc:
-                console.print (f"[bright_yellow]{j:.1f}[/bright_yellow]", end= '\t')
+                console.print(f"[bright_yellow]{j:.1f}[/bright_yellow]", end="\t")
         else:
-            ''' 
+            """
             reason for using multiple print instead of single f string:
             numbers in terminal need to be colored but using f string
             would make them string.
-            '''
-            console.print(f"CPU{i-1}(",end='')
-            console.print(round(busy,1),end='')
-            console.print("): -> ", end = '\t')
+            """
+            console.print(f"CPU{i-1}(", end="")
+            console.print(round(busy, 1), end="")
+            console.print("): -> ", end="\t")
             for j in perc:
-                console.print(round(j,1), end= '\t')
+                console.print(round(j, 1), end="\t")
         console.print()
 
 
-if __name__== "__main__":
+if __name__ == "__main__":
     print("ok")

@@ -1,0 +1,48 @@
+name: Python Auto Format
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install formatters
+        run: |
+          pip install black ruff docformatter
+
+      - name: Run Black (code formatting)
+        run: |
+          black .
+
+      - name: Run Ruff (auto-fix lint issues)
+        run: |
+          ruff check --fix .
+
+      - name: Run docformatter (docstrings)
+        run: |
+          docformatter -r -i .
+
+      - name: Commit changes (if any)
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto-format with black, ruff, docformatter"
+          commit_user_name: github-actions
+          commit_user_email: github-actions@github.com
+
