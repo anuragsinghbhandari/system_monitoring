@@ -21,3 +21,4 @@ fix = true
 [tool.docformatter]
 wrap-summaries = 88
 wrap-descriptions = 88
+make-summary-multi-line = true
