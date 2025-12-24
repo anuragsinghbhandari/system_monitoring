@@ -41,8 +41,8 @@ def read_cpu() -> List[List[int]]:
 
 
 def calc(b: List[List[int]], a: List[List[int]]):
-    """Function to calculate and display the usage which is difference in data
-    at particular  time intervals.
+    """Function to calculate and display the usage which is difference in data at
+    particular  time intervals.
 
     Args:
         b (List[List]): current data of proc file.
